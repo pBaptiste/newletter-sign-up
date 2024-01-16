@@ -1,0 +1,122 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { Image } from 'astro:assets';
+import checkMark from '../images/icon-list.svg'
+import success from '../images/icon-success.svg'
+import illustrationMobile from '../images/illustration-sign-up-mobile.svg'
+import illustrationDesktop from '../images/illustration-sign-up-desktop.svg'
+import ResponsiveImage from '../components/ResponsiveImage.astro';
+
+const updates = [
+	'Product discovery and building what matters',
+	'Measuring to ensure updates are a success',
+	'And much more!',
+]
+---
+
+<Layout title="Newsletter sign-up form">
+	<main class="min-h-screen flex justify-center lg:items-center">
+
+		<section id="newsletter" class="flex flex-col lg:flex-row lg:items-center lg:gap-16 max-w-[375px] lg:max-w-[928px] lg:rounded-2xl lg:py-6 lg:pl-16 lg:pr-6 bg-white">
+
+			<div class="w-[375px] lg:w-[400px] h-[284px] lg:h-[593px] rounded-b-2xl lg:order-2 lg:rounded-2xl lg:flex-none">
+				<ResponsiveImage imgMobile={illustrationMobile} imgDesktop={illustrationDesktop} alt=""/>
+			</div>
+
+			<div class="text-dark-navy py-10 lg:py-0 px-6 lg:px-0 lg:order-1">
+				<h1 class="text-[2.5rem] lg:text-[3.5rem] font-bold leading-10 lg:leading-[3.5rem] mb-6">Stay updated!</h1>
+				<p class="text-base leading-6 mb-6">Join 60,000+ product managers receiving monthly updates on:</p>
+				<div class="flex flex-col gap-[10px] mb-10">
+					{
+						updates.map(item => (
+						<div class="flex items-start gap-4">
+							<Image src={checkMark} alt=''/>
+							<p class="text-base leading-6">{item}</p>
+						</div>
+						))
+					}
+				</div>
+
+				<form action="" id="signUp">
+					<div class="flex justify-between items-center mb-2">
+						<label class="text-xs text-dark-navy font-bold leading-[1.125rem]" for="email">Email address</label>
+						<p id="error" class="hidden text-xs font-bold text-vermillion leading-[1.125rem]">Valid email required</p>
+					</div>
+					<input type="text" name="email" id="email" placeholder="email@company.com" class="rounded-lg border border-grey py-4 px-6 w-full placeholder:opacity-50 text-dark-navy text-base leading-6 outline-none hover:border-dark-navy focus:border-dark-navy mb-6">
+					<button type="submit" class="w-full rounded-lg bg-dark-navy hover:bg-btn-gradient focus:bg-btn-gradient hover:shadow-card focus:shadow-card outline-none text-white text-base font-bold leading-6 pt-[18px] pb-[14px] transition duration-300">Subscribe to monthly newsletter</button>
+				</form>
+			</div>
+		</section>
+
+		<section id="success" class="hidden flex-col max-w-[375px] lg:max-w-[504px] lg:rounded-[36px] bg-white px-6 pt-[149px] pb-10 lg:pt-12 lg:px-16 lg:pb-16"> 
+			<Image src={success} alt=''/>
+			<h2 class="text-dark-navy text-[2.5rem] lg:text-[3.5rem] font-bold leading-10 lg:leading-[3.5rem] mt-10 mb-6">Thanks for subscribing!</h2>
+			<p class="text-dark-navy text-base font-normal leading-6 mb-[263px] lg:mb-10">A confirmation email has been sent to <span class="font-bold">ash@loremcompany.com.</span> Please open it and click the button inside to confirm your subscription</p>
+			<button id="dismiss" type="button" class="w-full rounded-lg bg-dark-navy hover:bg-btn-gradient focus:bg-btn-gradient hover:shadow-card focus:shadow-card outline-none text-white text-base font-bold leading-6 pt-[18px] pb-[14px] transition duration-300">Dismiss message</button>
+		</section>
+	</main>
+</Layout>
+
+<style>
+	.inputError {
+		border: 1px solid rgb(255, 97, 85);
+		background-color: rgba(255, 97, 85, .15);
+		color: #FF6155;
+	}
+
+	/* Remove styling for autofill */
+	input:-webkit-autofill,
+	input:-webkit-autofill:hover, 
+	input:-webkit-autofill:focus,
+	input:-webkit-autofill:active {
+    transition: background-color 5000s ease-in-out 0s;
+    background-color: transparent !important;
+	color: inherit !important;
+	font-size: 16px !important;
+}
+</style>
+
+<script>
+	document.addEventListener('DOMContentLoaded', () => {
+		const signUpForm = document.getElementById('signUp');
+		const newsLetter = document.getElementById('newsletter') as HTMLElement;
+		const successMessage = document.getElementById('success') as HTMLElement;
+		const dismissBtn = document.getElementById('dismiss');
+		const email = document.getElementById('email') as HTMLInputElement;
+		const errorMsg = document.getElementById('error') as HTMLElement
+
+		signUpForm?.addEventListener('submit', (e) => {
+			e.preventDefault();
+
+			function validateEmail(email : string) {
+        		const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        		return emailRegex.test(email);
+      		}
+
+			const emailValue = email.value.trim();
+
+			if(!emailValue || !validateEmail(emailValue)) {
+				email.classList.add('inputError');
+				errorMsg.style.display = 'block';
+			} else {
+				newsLetter.style.display = 'none';
+				successMessage.style.display = 'flex'
+			}
+
+		})
+
+		email.addEventListener('click', () => {
+			email.classList.remove('inputError');
+		})
+
+		email.addEventListener('focus', () => {
+			email.classList.remove('inputError');
+		})
+
+		dismissBtn?.addEventListener('click', () => {
+			successMessage.style.display = 'none'
+			newsLetter.style.display = 'flex';
+			email.value = "";
+		})
+	})
+</script>

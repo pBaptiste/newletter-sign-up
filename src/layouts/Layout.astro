@@ -1,0 +1,33 @@
+---
+import '@fontsource/roboto/400.css';
+import '@fontsource/roboto/700.css';
+
+interface Props {
+	title: string;
+}
+
+const { title } = Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="description" content="Newsletter sign-up form" />
+		<meta name="viewport" content="width=device-width" />
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<meta name="generator" content={Astro.generator} />
+		<title>{title}</title>
+	</head>
+	<body>
+		<slot />
+	</body>
+</html>
+<style is:global>
+
+	html {
+		font-family: 'Roboto', sans-serif;
+		background: #36384D;
+	}
+
+</style>
